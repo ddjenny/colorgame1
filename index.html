@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>色弱遊戲</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            background-color: rgb(240, 96, 96);
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .wrap{
+            background-color: #ddd;
+            width: 520px;
+            height: 520px;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            /* justify-content: center;
+            align-items: center; */
+        }
+        .item{
+            border: #ddd solid 5px;
+            border-radius: 10px;
+            width: 50%;
+            height: 50%;
+        }
+        .item.active{
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <!-- <div class="item"></div> -->
+    </div>
+
+    <script>
+        let level = 0;//  等級
+        let quantity = level +2//  容器內色塊
+        let times = [1,1,1,2,3,4,5,6]// 在遊戲中加上次數
+        let count = 1;
+        const wrapElement = document.querySelector('.wrap')
+        // 建立item
+       function creatItem() {
+            let itemQty = quantity**2;
+            let answer = Math.floor(Math.random()*itemQty);
+
+            let items = '';
+            // 利用迴圈將wrap塞入item
+            // 隨機變色
+            let r = Math.floor(Math.random()*256)
+            let g = Math.floor(Math.random()*256)
+            let b = Math.floor(Math.random()*256)
+            let style = `style="background-color: rgb(${r},${g},${b}); width:calc(100%/${quantity}); height:calc(100%/${quantity});"` 
+            // let length = Math.floor(1/quantity*1000)/10;
+            // let style = `style="background-color:rgb(${r},${g},${b}); width:${length}%; height:${length}%;"`;
+
+            for(let i = 0 ; i < itemQty ; i++) {
+                // quantity作為單邊個數，計算item數量
+                if(i == answer){
+                    items += `<div class="item active" ${style}></div>`;
+                }else{
+                    items += `<div class="item" ${style}></div>`;
+                }
+            }
+            wrapElement.innerHTML = items;
+            // .innerHTML 塞入html語法(在Wrap塞入items)
+
+       }
+
+// 綁定答案功能
+function answerSetting() {
+            const answerElement = document.querySelector('.item.active');
+            answerElement.addEventListener('click',function () {
+                // 更新等級
+                count  += 1;
+                if(count >= times[level]){
+                    if (level < 7){
+                    level += 1;
+                    quantity += 1;
+                }
+                    count = 1;
+                }else{
+                    count += 1
+                }
+                // 更新畫面
+                updateWrap();
+            });
+        }
+        // 更新畫面
+        function updateWrap() {
+            creatItem();
+            answerSetting();
+        }
+        // 初始化遊戲
+        function initGame() {
+            level = 0;
+            quantity = level + 2;
+            updateWrap();
+        }
+        initGame();    
+    </script>
+</body>
+</html>
